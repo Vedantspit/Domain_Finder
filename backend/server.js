@@ -11,17 +11,24 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Update CORS to be specific
 app.use(
   cors({
-    origin: "https://domain-finder-swyx.vercel.app", // Your actual frontend URL
-    methods: ["GET", "POST", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "X-API-KEY"],
+    origin: "https://domain-finder-swyx.vercel.app", // Your specific frontend
+    methods: ["POST", "GET", "OPTIONS"],
+    allowedHeaders: ["Content-Type"],
   }),
 );
 
-// Handle preflight (OPTIONS) requests - Vercel sometimes needs this explicitly
+// Explicitly handle OPTIONS requests
 app.options("*", cors());
+// Health check route
+app.get("/", (req, res) => {
+  res.json({
+    status: "Backend is running!",
+    time: new Date().toISOString(),
+    api_key_loaded: !!process.env.SERPER_API_KEY,
+  });
+});
 const upload = multer({ storage: multer.memoryStorage() });
 
 const API_KEY = process.env.SERPER_API_KEY;
