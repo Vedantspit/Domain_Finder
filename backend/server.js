@@ -11,6 +11,17 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Update CORS to be specific
+app.use(
+  cors({
+    origin: "https://domain-finder-swyx.vercel.app", // Your actual frontend URL
+    methods: ["GET", "POST", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "X-API-KEY"],
+  }),
+);
+
+// Handle preflight (OPTIONS) requests - Vercel sometimes needs this explicitly
+app.options("*", cors());
 const upload = multer({ storage: multer.memoryStorage() });
 
 const API_KEY = process.env.SERPER_API_KEY;
