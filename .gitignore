@@ -1,0 +1,30 @@
+# Dependency directories
+node_modules/
+jspm_packages/
+
+# Environment variables (Crucial!)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Build outputs
+dist/
+build/
+.vercel/
+out/
+
+# Debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# Uploads and temporary processing files
+backend/uploads/
+backend/output.csv
+backend/preview.html
