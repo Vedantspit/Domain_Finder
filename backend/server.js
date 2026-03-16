@@ -32,23 +32,42 @@ app.get("/", (req, res) => {
 const upload = multer({ storage: multer.memoryStorage() });
 
 const API_KEY = process.env.SERPER_API_KEY;
-const CONCURRENCY = 10;
+const CONCURRENCY = 8;
 
-async function getDomain(company) {
+// async function getDomain(company) {
+//   try {
+//     const res = await axios.post(
+//       "https://google.serper.dev/search",
+//       { q: `${company} official website` },
+//       { headers: { "X-API-KEY": API_KEY, "Content-Type": "application/json" } },
+//     );
+//     const firstResult = res.data.organic?.[0];
+//     if (!firstResult || !firstResult.link) return "Not Found";
+//     return new URL(firstResult.link).hostname.replace("www.", "");
+//   } catch (err) {
+//     return "Error";
+//   }
+// }
+async function getDomain(company, retries = 2) {
   try {
     const res = await axios.post(
       "https://google.serper.dev/search",
       { q: `${company} official website` },
-      { headers: { "X-API-KEY": API_KEY, "Content-Type": "application/json" } },
+      { headers: { "X-API-KEY": API_KEY } },
     );
-    const firstResult = res.data.organic?.[0];
-    if (!firstResult || !firstResult.link) return "Not Found";
-    return new URL(firstResult.link).hostname.replace("www.", "");
+
+    const first = res.data.organic?.[0];
+    if (!first) return "Not Found";
+
+    return new URL(first.link).hostname.replace("www.", "");
   } catch (err) {
+    if (retries > 0) {
+      await new Promise((r) => setTimeout(r, 1000));
+      return getDomain(company, retries - 1);
+    }
     return "Error";
   }
 }
-
 app.post("/upload", upload.single("file"), async (req, res) => {
   if (!req.file) return res.status(400).json({ error: "No file uploaded" });
 
