@@ -32,7 +32,7 @@ app.get("/", (req, res) => {
 const upload = multer({ storage: multer.memoryStorage() });
 
 const API_KEY = process.env.SERPER_API_KEY;
-const CONCURRENCY = 5;
+const CONCURRENCY = 10;
 
 async function getDomain(company) {
   try {
