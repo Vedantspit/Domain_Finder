@@ -13,7 +13,7 @@ app.use(express.json());
 
 app.use(
   cors({
-    origin: "https://domain-finder-swyx.vercel.app", // Your specific frontend
+    origin: "https://domain-finders.vercel.app", // Your specific frontend
     methods: ["POST", "GET", "OPTIONS"],
     allowedHeaders: ["Content-Type"],
   }),
